@@ -1,8 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome Page";
 }
+<link rel="stylesheet" href="~/css/welcome.css" asp-append-version="true" />
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="welcome-section">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="welcome-message display-3">THE CULINARYEXPERIENCE JUST FOR YOU</h1>
+            <div class="row registration-button">
+                <a class="registration">Start Your Account <img class="registration-img" src="/media/icons8-right-arrow-50-dark.png" /></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <img class="welcome-image" src="/media/Phones2.png" />
+        </div>
+    </div>
 </div>

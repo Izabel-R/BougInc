@@ -1,0 +1,125 @@
+﻿.welcome-section {
+    position: relative;
+    margin: 0;
+    background-image: linear-gradient(to right, #353F2D, #353F2D 70%, White 30%, white);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.welcome-message {
+    color: #DCEDCF;
+    font-size: 4em; /* Default font size for large screens */
+    margin-left: 270px;
+    margin-top: 250px;
+    margin-right: 300px;
+}
+
+.welcome-image {
+    position: absolute;
+    left: 65%; /* Adjusted to match the background split */
+    top: 50%; /* Center vertically in the welcome-section */
+    transform: translate(-50%, -50%); /* Adjust for the image's size to center it properly */
+    max-width: 90%; /* Limit the image's width to not exceed 90% of its container's width */
+    max-height: 80vh; /* Limit the image's height to not exceed 80% of the viewport height */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.registration-button {
+    margin-top: 20px;
+    color: #353F2D;
+    font-size: 1em; /* Default font size for large screens */
+    margin-left: 270px;
+    margin-right: 300px;
+    border-radius: 100px;
+    background-color: #DCEDCF;
+    width: 250px;
+}
+
+    .registration-button:hover {
+        margin-top: 20px;
+        color: #DCEDCF;
+        font-size: 1em; /* Default font size for large screens */
+        margin-left: 270px;
+        margin-right: 300px;
+        border-radius: 100px;
+        background-color: #353F2D;
+        width: 250px;
+        border: 2px solid #DCEDCF;
+    }
+
+.registration-img {
+    margin-left: 20px;
+    background-image: url(../media/icons8-right-arrow-50-light.png);
+}
+
+.registration {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #353F2D;
+}
+
+    .registration:hover {
+        margin-left: 10px;
+        text-decoration: none;
+        color: #DCEDCF;
+    }
+
+/*4k Screen - 2560px*/
+@media (min-width: 2560px) {
+    .container {
+        max-width: 2400px; /* Set a max-width for your container on large screens */
+    }
+    
+}
+
+/*Laptop L Screen - 1440px*/
+@media (min-width: 1440px) {
+
+    .container {
+        max-width: 1400px; /* Set a max-width for your container on large screens */
+    }
+}
+
+/*Laptop Screen - 1024px*/
+@media (min-width: 1024px) {
+
+    .container {
+        max-width: 1000px; /* Set a max-width for your container on large screens */
+    }
+}
+
+/*Tablet Screen - 768px*/
+@media (min-width: 768px) {
+
+    .container {
+        max-width: 720px; /* Set a max-width for your container on large screens */
+    }
+}
+
+/*Mobile L Screen - 425px*/
+@media (min-width: 425px) {
+
+    .container {
+        max-width: 400px; /* Set a max-width for your container on large screens */
+    }
+}
+
+/*Mobile M Screen - 375px*/
+@media (min-width: 375px) {
+
+    .container {
+        max-width: 350px; /* Set a max-width for your container on large screens */
+    }
+}
+
+/*Mobile S Screen - 320px*/
+@media (min-width: 320px) {
+
+    .container {
+        max-width: 300px; /* Set a max-width for your container on large screens */
+    }
+}
