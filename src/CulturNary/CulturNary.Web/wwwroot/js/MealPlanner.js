@@ -1,13 +1,5 @@
 ﻿$(document).ready(function () {
 
-    function fetchApiKeys() {
-        return $.ajax({
-            url: '/api/config/getSecret',  // Adjust this URL to where your secrets are provided by your backend
-            type: 'GET'
-        });
-    }
-
-
     $('[id^=heading]').on("click", function () {
         var id = $(this).attr('id').replace('heading', '');
         $('[id^=collapse]').hide();
@@ -188,6 +180,7 @@
     $('#collapse8').on('show.bs.collapse', function () {
         $('#heading8').css('display', 'none');
     })
+
     function addToHeader() {
 
         var searchQuery = $('.search.q').val(),
@@ -624,6 +617,7 @@
             var cal, pro, fat, carbs, img, ingrd, ingr, srv;
 
             var jsonData = JSON.stringify(jsonMeal);
+            console.log(jsonData);
 
             $.ajax({
                 url: 'https://api.edamam.com/api/recipes/v2/' + param + '?type=public&app_id=469fc797&app_key=01c8217e070a97ba8180863e94daa8e6',    //recipe
@@ -702,19 +696,17 @@
                     output = '<div class="nutr-block">' +
                         '	<div class="row">' +
                         '		<div class="col-md-12">' +
-                        '			<div class="recipe-title text-uppercase mb-3">' + title + '</div>' +
+                        '			<div class="recipe-title">' + title + '</div>' +
                         '		</div>' +
                         '		<div class="col-md-6">' +
                         '			<div class="recipe-ico"></div>' +
                         '			<div><a href="' + res.recipe.shareAs + '" target="_new">' + img + '</a></div>' +
                         '		</div>' +
-                        '   	<div class="col-md-6">' +
+                        '   	<div class="col-md-6 text-dark">' +
                         '			<div class="serv">' + srv + ' servings</div>' +
                         '			<div class="daily-cal-area">' +
                         '				<div class="daily-cal">' + cal + '</div> kcal' +
                         '			</div>' +
-                        '		</div>'+								
-                        '   	<div class="col-md-12">'+
                         '   		<ul class="nutr-left">' +
                         '   			<li class="protein">' +
                         '   				<span>Protein</span>' +
@@ -734,6 +726,7 @@
                         '</div>';
 
                     return output;
+                    console.log(output)
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -742,12 +735,14 @@
         }
 
         $.ajax({
-            url: 'https://api.edamam.com/api/meal-planner/v1/b26fb46d/select?app_id=b26fb46d&app_key=c887a724df8435d92a76f3ec8b3ba91a', 
+            url: 'https://api.edamam.com/api/meal-planner/v1/b26fb46d/select?app_id=b26fb46d&app_key=c887a724df8435d92a76f3ec8b3ba91a',       //meal-planner
             type: 'POST',
             data: jsonMeal,
             dataType: 'JSON',
             contentType: "application/json; charset=UTF-8",
             success: function (data) {
+
+                //$('.openJSON').css('display', 'block');
 
                 if (data.status == "OK") {
                     console.log(data)
@@ -758,7 +753,6 @@
                     var end = "no";
 
                     $.each(data.selection, function (i) {
-                        console.log(data.selection[i])
                         if (end == "no") {
                             html += '<div class="col-md-1"></div>';
                             html += '<div class="col-md-11">';
@@ -792,8 +786,6 @@
                         }
                     });
 
-
-
                     $.each(data.selection, function (i) {
 
                         html += '<div class="col-md-1">';
@@ -802,7 +794,7 @@
 
                         $.each(data.selection[i], function (key, valueObj) {
                             html += '<div class="col-md-11">';
-                            html += '   <div class="row cards-row">';
+                            html += '   <div class="row">';
 
                             function printMeal(mealTitle, mealType) {
                                 html += '<div class="col-md-4">';
@@ -833,10 +825,10 @@
                             html += '</div>';
                             html += '</div>';
                         });
+
                     });
 
                     html += '</div>';
-                    html += '<div><button type="button" class="btn btn-primary save-meal-plan mb-4">Save Meal Plan</button></div>';
 
                     $(".result-area").append(html);
 
@@ -845,6 +837,7 @@
                     $('.content-area').css('display', 'block');
 
                 } else {
+                    // ERROR
                     $('#errorModal').find('.modal-body').html('');
                     $('#errorModal').find('.modal-body').html('<p>Ooops, nothing in our recipes database matches what you are searching for! Please try again.</p>');
                     $('#errorModal').modal('show');
@@ -869,7 +862,8 @@
                 401: function () {
 
                 },
-                500: function () { 
+                500: function () { //Bad request
+                    // ERROR
                     $('#errorModal').find('.modal-body').html('');
                     $('#errorModal').find('.modal-body').html('<p style="text-align: center;">HTTP Status 500 – Internal Server Error</p><pre>' + JSON.parse(JSON.stringify(jsonMeal)) + '</pre>');
                     $('#errorModal').modal('show');
@@ -891,10 +885,6 @@
 
     $('.analyze-demo').on("click", function () {
         GoToSearch();
-    });
-
-    $('.calc-analysis-api-new').on("click", function () {
-        location.reload();
     });
 
     $('.btn-link').on("click", function () {
