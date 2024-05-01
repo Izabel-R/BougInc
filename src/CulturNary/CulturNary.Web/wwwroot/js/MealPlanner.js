@@ -947,7 +947,6 @@
             $('.all-meals').append('<span class="right-filter nutrientsValue" data-nutrient="' + this.value + '" data-min="' + min + '" data-max="' + max + '" data-range="' + range + '">' + $(this).closest('.mdesc').prev('.checkbox-button__label').text() + ' - ' + range + $(this).data('measure') + '<span class="close_control"></span></span>');
             console.log('nutrients[' + this.value + ']');
         }
-    });
 
     $(".cal-check input[type='checkbox']").change(function () {
         if (this.checked) {
@@ -1006,7 +1005,6 @@
             });
             localStorage.removeItem('meal[' + this.value + ']');
         }
-    });
 
     $(".diet-check input[type='checkbox']").change(function () {
         var val = this.value;
@@ -1190,13 +1188,6 @@
                     $(this).prop('checked', false);
                 }
             });
-            localStorage.removeItem('nutrients[' + val + ']');
-
-        } else if ($(this).closest('.right-filter').hasClass('searchValue')) {
-            $('.search.q').val('');
-            $('.search.q-top').val('');
-        }
-        return false;
     });
 
 });

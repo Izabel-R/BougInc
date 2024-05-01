@@ -30,19 +30,7 @@ public class HomeController : Controller
     }
 
     [Authorize(Roles = "Signed,Admin")]
-    public IActionResult MealPlanIndex()
-    {
-        return View();
-    }
-
-    [Authorize(Roles = "Signed,Admin")]
-    public IActionResult MealPlanGenerator()
-    {
-        return View();
-    }
-
-    [Authorize(Roles = "Signed,Admin")]
-    public IActionResult Plan()
+    public IActionResult MealPlanner()
     {
         return View();
     }
@@ -87,6 +75,12 @@ public class HomeController : Controller
         return View();
     }
 
+    [Authorize(Roles = "Signed,Admin")]
+    public IActionResult ImageRecognition()
+    {
+        return View();
+    }
+
     [Route("Home/Error/{code?}")]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error(int? code)
@@ -100,6 +94,7 @@ public class HomeController : Controller
         Console.WriteLine($"Error: {code}");
 
         return View(errorViewModel);
+
     }
 
     [HttpPost]
