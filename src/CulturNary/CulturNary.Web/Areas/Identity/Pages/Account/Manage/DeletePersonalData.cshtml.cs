@@ -10,23 +10,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CulturNary.Web.Areas.Identity.Data;
-
+using CulturNary.DAL.Abstract;
 namespace CulturNary.Web.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
         private readonly UserManager<SiteUser> _userManager;
         private readonly SignInManager<SiteUser> _signInManager;
-        private readonly ILogger<DeletePersonalDataModel> _logger;
+        //private readonly ILogger<DeletePersonalDataModel> _logger;
+        // private readonly IFavoriteRecipeRepository _favoriteRecipeRepository;
 
         public DeletePersonalDataModel(
             UserManager<SiteUser> userManager,
-            SignInManager<SiteUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            SignInManager<SiteUser> signInManager
+            //ILogger<DeletePersonalDataModel> logger,
+            // IFavoriteRecipeRepository favoriteRecipeRepository
+            )
         {
+            // _favoriteRecipeRepository = favoriteRecipeRepository;
             _userManager = userManager;
             _signInManager = signInManager;
-            _logger = logger;
+            //_logger = logger;
         }
 
         /// <summary>
@@ -86,7 +90,7 @@ namespace CulturNary.Web.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-
+            // _favoriteRecipeRepository.DeleteAllRecipeForPersonID(user.Id);
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
@@ -96,7 +100,7 @@ namespace CulturNary.Web.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
+            //_logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);
 
             return Redirect("~/");
         }

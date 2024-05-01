@@ -30,6 +30,12 @@ public class HomeController : Controller
     }
 
     [Authorize(Roles = "Signed,Admin")]
+    public IActionResult MealPlanner()
+    {
+        return View();
+    }
+
+    [Authorize(Roles = "Signed,Admin")]
     public IActionResult GroceryList()
     {
         return View();
@@ -47,6 +53,30 @@ public class HomeController : Controller
     }
     [Authorize(Roles = "Signed,Admin")]
     public IActionResult RecipeSearchEngine()
+    {
+        return View();
+    }
+
+    [Authorize(Roles = "Signed,Admin")]
+    public IActionResult Tools()
+    {
+        return View();
+    }
+
+    [Authorize(Roles = "Signed,Admin")]
+    public IActionResult Restaurants()
+    {
+        return View();
+    }
+
+    [Authorize(Roles = "Signed,Admin")]
+    public IActionResult Video()
+    {
+        return View();
+    }
+
+    [Authorize(Roles = "Signed,Admin")]
+    public IActionResult ImageRecognition()
     {
         return View();
     }
