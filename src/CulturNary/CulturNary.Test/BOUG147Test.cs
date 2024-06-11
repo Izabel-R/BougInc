@@ -1,138 +1,240 @@
-using System;
 using Moq;
-
-namespace RecipeAppTests
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using CulturNary.DAL.Concrete;
+using CulturNary.DAL.Abstract;
+using CulturNary.Web.Models;
+using System.Collections.Generic;
+using CulturNary.Web.Models;
+[TestFixture]
+public class FavoriteRecipeRepositoryTests
 {
-    [TestFixture]
-    public class LikedRecipesTests
+    private IFavoriteRecipeRepository _repository;
+    private Mock<CulturNaryDbContext> _mockContext;
+    private Mock<IPersonRepository> _mockPersonRepository;
+    private Mock<ISharedRecipeRepository> _mockSharedRecipeRepository;
+
+    [SetUp]
+    public void SetUp()
     {
-        private Mock<ILikedRecipesRepository> _likedRecipesRepositoryMock;
-        private LikedRecipesService _likedRecipesService;
+        _mockContext = new Mock<CulturNaryDbContext>();
+        _mockPersonRepository = new Mock<IPersonRepository>();
+        _mockSharedRecipeRepository = new Mock<ISharedRecipeRepository>();
 
-        [SetUp]
-        public void Setup()
+        var expectedRecipe = new FavoriteRecipe
         {
+            Id = 1,
+            PersonId = 1,
+            RecipeId = "1",
+            FavoriteDate = DateTime.Now,
+            ImageUrl = "http://example.com/image.jpg",
+            Label = "Test Label",
+            Uri = "http://example.com",
+            Tags = "test"
+        };
 
-            _likedRecipesRepositoryMock = new Mock<ILikedRecipesRepository>();
-            _likedRecipesService = new LikedRecipesService(_likedRecipesRepositoryMock.Object);
-        }
+        var data = new List<FavoriteRecipe> { expectedRecipe }.AsQueryable();
 
-        [Test]
-        public void AddLikeShouldAddLikeWhenRecipeAndUserAreValid()
-        {
-            // Arrange
-            var userId = 1;
-            var recipeId = 1;
-            _likedRecipesRepositoryMock.Setup(repo => repo.AddLike(userId, recipeId)).Returns(true);
+        var mockSet = new Mock<DbSet<FavoriteRecipe>>();
+        mockSet.As<IQueryable<FavoriteRecipe>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<FavoriteRecipe>>().Setup(m => m.Expression).Returns(data.Expression);
+        mockSet.As<IQueryable<FavoriteRecipe>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        mockSet.As<IQueryable<FavoriteRecipe>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 
-            // Act
-            var result = _likedRecipesService.AddLike(userId, recipeId);
-        }
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>()).Returns(mockSet.Object);
 
-        [Test]
-        public void RemoveLikeShouldRemoveLikeWhenLikeExists()
-        {
-            // Arrange
-            var userId = 1;
-            var recipeId = 1;
-            _likedRecipesRepositoryMock.Setup(repo => repo.RemoveLike(userId, recipeId)).Returns(true);
-
-            // Act
-            var result = _likedRecipesService.RemoveLike(userId, recipeId);
-        }
-
-        [Test]
-        public void GetLikedRecipesByUserShouldReturnRecipesWhenUserHasLikes()
-        {
-            // Arrange
-            var userId = 1;
-            var expectedRecipes = new List<Recipe>();
-            _likedRecipesRepositoryMock.Setup(repo => repo.GetLikedRecipesByUser(userId)).Returns(expectedRecipes);
-
-            // Act
-            var result = _likedRecipesService.GetLikedRecipesByUser(userId);
-        }
-
-        [Test]
-        public void AddLikeShouldThrowExceptionWhenRecipeDoesNotExist()
-        {
-            // Arrange
-            var userId = 1;
-            var recipeId = 1;
-            _likedRecipesRepositoryMock.Setup(repo => repo.AddLike(userId, recipeId)).Throws(new Exception("Recipe does not exist"));
-
-            // Act
-            try
-            {
-                var result = _likedRecipesService.AddLike(userId, recipeId);
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-            }
-        }
-
-        [Test]
-        public void AddLikeShouldThrowExceptionWhenUserDoesNotExist()
-        {
-            // Arrange
-            var userId = 1;
-            var recipeId = 1;
-            _likedRecipesRepositoryMock.Setup(repo => repo.AddLike(userId, recipeId)).Throws(new Exception("User does not exist"));
-
-            // Act
-            try
-            {
-                var result = _likedRecipesService.AddLike(userId, recipeId);
-            }
-            catch (Exception ex)
-            {
-                // Handle exception
-            }
-        }
-
-        [Test]
-        public void GetLikedRecipesByUserShouldReturnEmptyListWhenUserHasNoLikes()
-        {
-            // Arrange
-            var userId = 1;
-            var expectedRecipes = new List<Recipe>();
-            _likedRecipesRepositoryMock.Setup(repo => repo.GetLikedRecipesByUser(userId)).Returns(expectedRecipes);
-
-            // Act
-            var result = _likedRecipesService.GetLikedRecipesByUser(userId);
-        }
-        [Test]
-        public void GetLikesByUserId_ShouldReturnLikesArray()
-        {
-            // Arrange
-            var userId = 1; // Example user ID
-            var expectedLikes = new List<Like>(); // Assume Like is your model
-            _likedRecipesRepositoryMock.Setup(repo => repo.GetLikesByUserId(It.IsAny<int>()))
-                                       .Returns(expectedLikes);
-
-            // Act
-            var result = _likedRecipesService.GetLikesByUserId(userId);
-
-            // Assert
-            Assert.IsNotNull(result);
-        }
-        [Test]
-        public void SearchFavorites_ShouldReturnResultsBasedOnSearchCriteria()
-        {
-            // Arrange
-            var userId = 1; // Example user ID
-            var searchTerm = "exampleSearchTerm"; // Replace with an actual search term
-            List<Recipe> expectedResults = null; // Replace with expected results or mock setup
-            
-            // TODO: Set up the expectedResults with a mocked return value that matches the search criteria.
-            // _likedRecipesRepositoryMock.Setup(repo => repo.SearchFavorites(userId, searchTerm)).Returns(expectedResults);
-
-            // Act
-            // var actualResults = _likedRecipesService.SearchFavorites(userId, searchTerm);
-
-            // Assert
-            // Assert.AreEqual(expectedResults, actualResults, "The search results should match the expected results based on the search criteria.");
-        }
+        _repository = new FavoriteRecipeRepository(_mockContext.Object, _mockPersonRepository.Object, _mockSharedRecipeRepository.Object);
     }
+
+    [Test]
+    public void TestGetFavoriteRecipeForPersonID()
+    {
+        // Arrange
+        var expectedRecipe = new FavoriteRecipe
+        {
+            Id = 1,
+            PersonId = 1,
+            RecipeId = "1",
+            FavoriteDate = DateTime.Now,
+            ImageUrl = "http://example.com/image.jpg",
+            Label = "Test Label",
+            Uri = "http://example.com",
+            Tags = "test"
+        };
+
+        // Act
+        var result = _repository.GetFavoriteRecipeForPersonID(1);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Count, Is.EqualTo(1));
+        var firstResult = result[0];
+        Assert.That(firstResult.Id, Is.EqualTo(expectedRecipe.Id));
+        Assert.That(firstResult.PersonId, Is.EqualTo(expectedRecipe.PersonId));
+        Assert.That(firstResult.RecipeId, Is.EqualTo(expectedRecipe.RecipeId));
+        Assert.That(firstResult.FavoriteDate.Date, Is.EqualTo(expectedRecipe.FavoriteDate.Date));
+        Assert.That(firstResult.ImageUrl, Is.EqualTo(expectedRecipe.ImageUrl));
+        Assert.That(firstResult.Label, Is.EqualTo(expectedRecipe.Label));
+        Assert.That(firstResult.Uri, Is.EqualTo(expectedRecipe.Uri));
+        Assert.That(firstResult.Tags, Is.EqualTo(expectedRecipe.Tags));
+    }
+    [Test]
+    public void TestGetFavoriteRecipeForInvalidPersonID()
+    {
+        // Arrange
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>().Find(It.IsAny<int>())).Returns((FavoriteRecipe)null);
+
+        // Act
+        var result = _repository.GetFavoriteRecipeForPersonID(-1);
+
+        // Assert
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public void TestGetFavoriteRecipeForPersonIDAndRecipeID()
+    {
+        // Arrange
+        var expectedRecipe = new FavoriteRecipe
+        {
+            Id = 1,
+            PersonId = 1,
+            RecipeId = "1",
+            FavoriteDate = DateTime.Now,
+            ImageUrl = "http://example.com/image.jpg",
+            Label = "Test Label",
+            Uri = "http://example.com",
+            Tags = "test"
+        };
+
+        // Act
+        var result = _repository.GetFavoriteRecipeForPersonIDAndRecipeID(1, 1);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Id, Is.EqualTo(expectedRecipe.Id));
+        Assert.That(result.PersonId, Is.EqualTo(expectedRecipe.PersonId));
+        Assert.That(result.RecipeId, Is.EqualTo(expectedRecipe.RecipeId));
+        Assert.That(result.FavoriteDate.Date, Is.EqualTo(expectedRecipe.FavoriteDate.Date));
+        Assert.That(result.ImageUrl, Is.EqualTo(expectedRecipe.ImageUrl));
+        Assert.That(result.Label, Is.EqualTo(expectedRecipe.Label));
+        Assert.That(result.Uri, Is.EqualTo(expectedRecipe.Uri));
+        Assert.That(result.Tags, Is.EqualTo(expectedRecipe.Tags));
+    }
+
+    [Test]
+    public void TestGetFavoriteRecipeByRecipeId()
+    {
+        // Arrange
+        var expectedRecipe = new FavoriteRecipe
+        {
+            Id = 1,
+            PersonId = 1,
+            RecipeId = "1",
+            FavoriteDate = DateTime.Now,
+            ImageUrl = "http://example.com/image.jpg",
+            Label = "Test Label",
+            Uri = "http://example.com",
+            Tags = "test"
+        };
+
+        // Act
+        var result = _repository.GetFavoriteRecipeByRecipeId("1");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Id, Is.EqualTo(expectedRecipe.Id));
+        Assert.That(result.PersonId, Is.EqualTo(expectedRecipe.PersonId));
+        Assert.That(result.RecipeId, Is.EqualTo(expectedRecipe.RecipeId));
+        Assert.That(result.FavoriteDate.Date, Is.EqualTo(expectedRecipe.FavoriteDate.Date));
+        Assert.That(result.ImageUrl, Is.EqualTo(expectedRecipe.ImageUrl));
+        Assert.That(result.Label, Is.EqualTo(expectedRecipe.Label));
+        Assert.That(result.Uri, Is.EqualTo(expectedRecipe.Uri));
+        Assert.That(result.Tags, Is.EqualTo(expectedRecipe.Tags));
+    }
+
+    [Test]
+    public void TestSearchFavoriteRecipesForPersonID()
+    {
+        // Arrange
+        var expectedRecipe = new FavoriteRecipe
+        {
+            Id = 1,
+            PersonId = 1,
+            RecipeId = "1",
+            FavoriteDate = DateTime.Now,
+            ImageUrl = "http://example.com/image.jpg",
+            Label = "Test Label",
+            Uri = "http://example.com",
+            Tags = "test"
+        };
+
+        // Act
+        var result = _repository.SearchFavoriteRecipesForPersonID(1, "Test");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Count, Is.EqualTo(1));
+        var firstResult = result[0];
+        Assert.That(firstResult.Id, Is.EqualTo(expectedRecipe.Id));
+        Assert.That(firstResult.PersonId, Is.EqualTo(expectedRecipe.PersonId));
+        Assert.That(firstResult.RecipeId, Is.EqualTo(expectedRecipe.RecipeId));
+        Assert.That(firstResult.FavoriteDate.Date, Is.EqualTo(expectedRecipe.FavoriteDate.Date));
+        Assert.That(firstResult.ImageUrl, Is.EqualTo(expectedRecipe.ImageUrl));
+        Assert.That(firstResult.Label, Is.EqualTo(expectedRecipe.Label));
+        Assert.That(firstResult.Uri, Is.EqualTo(expectedRecipe.Uri));
+        Assert.That(firstResult.Tags, Is.EqualTo(expectedRecipe.Tags));
+    }
+    [Test]
+    public void TestGetFavoriteRecipeForNonExistingPersonID()
+    {
+        // Arrange
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>().Find(It.IsAny<int>())).Returns((FavoriteRecipe)null);
+
+        // Act
+        var result = _repository.GetFavoriteRecipeForPersonID(9999);
+
+        // Assert
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public void TestGetFavoriteRecipeForPersonIDAndNonExistingRecipeID()
+    {
+        // Arrange
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>().Find(It.IsAny<int>())).Returns((FavoriteRecipe)null);
+
+        // Act
+        var result = _repository.GetFavoriteRecipeForPersonIDAndRecipeID(1, 9999);
+
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void TestGetFavoriteRecipeByNonExistingRecipeId()
+    {
+        // Arrange
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>().Find(It.IsAny<int>())).Returns((FavoriteRecipe)null);
+
+        // Act
+        var result = _repository.GetFavoriteRecipeByRecipeId("9999");
+
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
+    [Test]
+    public void TestSearchFavoriteRecipesForPersonIDWithNonExistingKeyword()
+    {
+        // Arrange
+        _mockContext.Setup(c => c.Set<FavoriteRecipe>().Find(It.IsAny<int>())).Returns((FavoriteRecipe)null);
+
+        // Act
+        var result = _repository.SearchFavoriteRecipesForPersonID(1, "NonExistingKeyword");
+
+        // Assert
+        Assert.That(result, Is.Empty);
+    }
+
 }

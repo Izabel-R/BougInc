@@ -1,11 +1,11 @@
--- Step 1: Create the Person table
+-- Create the Person table
 CREATE TABLE Person (
     id INT PRIMARY KEY IDENTITY(1,1),
     identity_id NVARCHAR(450) UNIQUE
     -- Add other columns as needed
 );
 
--- Step 2: Create the Collections table
+-- Create the Collections table
 CREATE TABLE Collections (
     id INT PRIMARY Key IDENTITY (1,1),
     person_id INT,
@@ -16,14 +16,93 @@ CREATE TABLE Collections (
     FOREIGN KEY (person_id) REFERENCES Person(id)
 );
 
--- Step 3: Create the Recipes table
+-- Create the Recipes table
 CREATE TABLE Recipes (
     id INT PRIMARY KEY IDENTITY(1,1),
     collection_id INT,
-    person_id INT, -- New column
+    person_id INT,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(MAX),
     img VARCHAR(MAX),
+    uri VARCHAR(MAX),
     FOREIGN KEY (collection_id) REFERENCES Collections(id),
-    FOREIGN KEY (person_id) REFERENCES Person(id) -- New foreign key constraint
+    FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+-- Create the FavoriteRecipe table
+CREATE TABLE FavoriteRecipe (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    person_id INT NOT NULL,
+    recipe_id VARCHAR(MAX),
+    favorite_date DATETIME NOT NULL,
+    ImageUrl VARCHAR(MAX),
+    Label VARCHAR(MAX),
+    Uri VARCHAR(MAX),
+    tags VARCHAR(MAX)
+);
+
+-- Create the Videos table
+CREATE TABLE Videos (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    person_id INT,
+    video_name VARCHAR(255) NOT NULL,
+    video_type VARCHAR(100),
+    video_link VARCHAR(MAX),
+    video_notes VARCHAR(MAX),
+    FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+-- Create the Restaurants table
+CREATE TABLE Restaurants (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    person_id INT,
+    restaurants_name VARCHAR(255) NOT NULL,
+    restaurants_address VARCHAR(MAX),
+    restaurants_website VARCHAR(MAX),
+    restaurants_menu VARCHAR(MAX),
+    restaurants_phone_number VARCHAR(20),
+    restaurants_notes VARCHAR(MAX),
+    restaurant_type VARCHAR(100),
+    FOREIGN KEY (person_id) REFERENCES Person(id)
+);
+
+-- Create the FriendRequest table
+CREATE TABLE FriendRequest (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    RequesterId INT,
+    RecipientId INT,
+    Status VARCHAR(255),
+    RequestDate DATETIME,
+    ResponseDate DATETIME,
+    FOREIGN KEY (RecipientId) REFERENCES Person(id),
+    FOREIGN KEY (RequesterId) REFERENCES Person(id)
+);
+
+-- Create the Friendship table
+CREATE TABLE Friendship (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Person1Id INT,
+    Person2Id INT,
+    FriendshipDate DATETIME,
+    FOREIGN KEY (Person1Id) REFERENCES Person(id),
+    FOREIGN KEY (Person2Id) REFERENCES Person(id)
+);
+CREATE TABLE BlockedUsers (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    blocker_identity_id NVARCHAR(450),
+    blocked_identity_id NVARCHAR(450),
+    block_date DATETIME NOT NULL,
+    FOREIGN KEY (blocker_identity_id) REFERENCES Person(identity_id),
+    FOREIGN KEY (blocked_identity_id) REFERENCES Person(identity_id)
+);
+-- Create the SharedRecipes table
+CREATE TABLE SharedRecipes (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    sharer_id INT NOT NULL,
+    shared_with_id INT NOT NULL,
+    favorite_recipe_id INT NOT NULL,
+    share_date DATETIME NOT NULL,
+    FOREIGN KEY (sharer_id) REFERENCES Person(id),
+    FOREIGN KEY (shared_with_id) REFERENCES Person(id),
+    FOREIGN KEY (favorite_recipe_id) REFERENCES FavoriteRecipe(id)
 );

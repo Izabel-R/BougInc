@@ -1,0 +1,54 @@
+.table {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    width: 100%;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 15px; /* Rounded corners */
+}
+
+.table th {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left;
+    background-color: #505C47;
+    color: white;
+}
+
+.btn-custom {
+    background-color: #505C47;
+    color: white;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #404B3F;
+}
+
+.btn-accept {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+}
+
+.btn-reject, .btn-unfriend {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+}
+
+.tag {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    padding: 2px 6px;
+    font-size: 85%;
+    border-radius: 4px;
+}
+.btn-block {
+    background-color: #FFA500; /* Orange */
+    color: white;
+    border: none;
+}
